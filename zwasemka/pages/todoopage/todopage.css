@@ -13,32 +13,59 @@ body {
     background-color: var(--bg-color);
     color: var(--text-color);
     margin: 0;
-    padding: 20px;
     display: flex;
     flex-direction: column;
-    align-items: center;
     min-height: 100vh;
 }
 
-h1 {
-    color: var(--text-color);
-    margin: 40px 0 20px 0;
-    font-size: 2rem;
-    text-align: center;
-}
-.edit-input {
-    flex: 1;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    padding: 4px 6px;
-}
-.edit-input:focus {
-    outline: none;
-    border-color: #2c2c2e;
-    box-shadow: 0 0 0 3px rgba(44,44,46,0.05);
+.site-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #18181b;
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
+.logo {
+    font-size: 1.4rem;
+    margin: 0;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    margin-left: 1.5rem;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.nav-links a:hover {
+    color: #a5b4fc;
+}
+
+.nav-links .active {
+    border-bottom: 2px solid #a5b4fc;
+}
+
+main.todomain {
+    display: grid;
+    place-items: center;
+    flex: 1;
+    min-height: calc(100vh - 80px);
+}
+
+
+
+h2 {
+    color: var(--text-color);
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+}
 
 .todopage {
     background-color: var(--form-bg-color);
@@ -111,8 +138,6 @@ button:active {
     border-radius: 6px;
     margin-bottom: 8px;
     background-color: #f9f9f9;
-
-    /* Анимация появления */
     opacity: 0;
     transform: translateY(-10px);
     animation: fadeInTask 0.3s forwards;
@@ -135,7 +160,7 @@ button:active {
     height: 24px;
     accent-color: var(--text-color);
     cursor: pointer;
-    transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+    transition: transform 0.2s ease-in-out;
 }
 
 .todolist li input[type="checkbox"]:checked {
@@ -154,4 +179,28 @@ button:active {
 
 .todolist li button:hover {
     background-color: #be123c;
+}
+
+.edit-input {
+    flex: 1;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 4px 6px;
+}
+
+.edit-input:focus {
+    outline: none;
+    border-color: #2c2c2e;
+    box-shadow: 0 0 0 3px rgba(44,44,46,0.05);
+}
+.todomain {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    width: 100%;
+    min-height: calc(100vh - 80px);
+    box-sizing: border-box;
 }
