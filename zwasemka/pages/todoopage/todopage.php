@@ -10,7 +10,7 @@
     <script src="todopage.js" defer></script>
 </head>
 <body>
-<h1> T0D0 </h1>
+<h1> To do list </h1>
 <div class="todopage">
 
     <label for="todofield"> Write a task</label>

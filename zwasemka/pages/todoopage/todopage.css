@@ -26,6 +26,19 @@ h1 {
     font-size: 2rem;
     text-align: center;
 }
+.edit-input {
+    flex: 1;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 4px 6px;
+}
+.edit-input:focus {
+    outline: none;
+    border-color: #2c2c2e;
+    box-shadow: 0 0 0 3px rgba(44,44,46,0.05);
+}
+
 
 .todopage {
     background-color: var(--form-bg-color);
