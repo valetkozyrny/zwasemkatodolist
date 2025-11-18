@@ -8,14 +8,13 @@
     <title>My To-Do List App</title>
     <link rel="stylesheet" href="mainpage.css">
     <script src="mainpage.js" defer></script>
-    <title>Todo</title>
 </head>
 <body>
 <header class="site-header">
     <h1 class="logo">📝 My To-Do</h1>
     <nav class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="todopage.html">Tasks</a>
+        <a href="../mainpage/mainpage.php">Home</a>
+        <a href="../todoopage/todopage.php" class="active">Tasks</a>
         <a href="profile.html">Profile</a>
     </nav>
 </header>
@@ -29,11 +28,11 @@
         </p>
 
 
-        <a href="registration.php" class="button">Start Your To-Do List</a>
+        <a href="../registrpage/registration.php" class="button">Start Your To-Do List</a>
     </section>
 
     <section class="preview">
-        <img src="Gemini_Generated_Image_sisqjmsisqjmsisq.png" alt="Preview of To-Do app">
+        <img src="fotofor.png" alt="Preview of To-Do app">
     </section>
 </main>
 <section class="features">

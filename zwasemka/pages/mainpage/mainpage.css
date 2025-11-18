@@ -7,7 +7,6 @@
     --border-color: #e5e5e5;
 }
 
-/* ---------- BODY ---------- */
 body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -18,7 +17,6 @@ body {
     min-height: 100vh;
 }
 
-/* ---------- HEADER ---------- */
 .site-header {
     display: flex;
     justify-content: space-between;
@@ -53,7 +51,6 @@ body {
     border-bottom: 2px solid #a5b4fc;
 }
 
-/* ---------- MAIN ---------- */
 main.homepage {
     display: flex;
     justify-content: space-around;
@@ -98,7 +95,6 @@ main.homepage {
     transform: translateY(-3px);
 }
 
-/* ---------- IMAGE PREVIEW ---------- */
 .preview img {
     width: 420px;
     max-width: 100%;
@@ -107,7 +103,6 @@ main.homepage {
     animation: fadeInUp 1s ease forwards;
 }
 
-/* ---------- FEATURES ---------- */
 .features {
     display: flex;
     justify-content: center;
@@ -146,7 +141,6 @@ main.homepage {
     line-height: 1.4;
 }
 
-/* ---------- FOOTER ---------- */
 .footer {
     text-align: center;
     padding: 1rem;
@@ -156,7 +150,6 @@ main.homepage {
     border-top: 1px solid var(--border-color);
 }
 
-/* ---------- ANIMATIONS ---------- */
 @keyframes fadeInUp {
     from {
         opacity: 0;

@@ -13,17 +13,17 @@
 <form id="regForm" action="/registration" method="post" novalidate data-js-form>
     <h4> Registration </h4>
     <p class="field">
-        <label class="field__label" for="login">Email</label>
+        <label class="field__label" for="email">Email</label>
         <input
                 class="field__control"
-                id="login"
-                name="login"
+                id="email"
+                name="email"
                 required
                 minlength="3"
-                maxlength="12"
-                aria-errormessage="login-errors"
+                maxlength="18"
+                aria-errormessage="email-errors"
         />
-        <span class="field__errors" id="login-errors" data-js-form-field-errors></span>
+        <span class="field__errors" id="email-errors" data-js-form-field-errors></span>
     </p>
     <p class="field">
         <label class="field__label" for="password">Password</label>
@@ -54,7 +54,7 @@
                 type="radio"
                 value="Male"
                 required
-                aria-errormessage="password-errors"
+                aria-errormessage="gender-errors"
         />
         <label class="radios__label" for="male">Male</label>
 
@@ -65,7 +65,7 @@
                 type="radio"
                 value="Female"
                 required
-                aria-errormessage="password-errors"
+                aria-errormessage="gender-errors"
         />
         <label class="radios__label" for="female">Female</label>
 
