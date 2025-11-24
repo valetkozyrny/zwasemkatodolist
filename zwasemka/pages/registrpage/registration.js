@@ -68,7 +68,7 @@ class FormsValidation {
     }
 
     onSubmit(event) {
-        const isFormElement = event.target.mathes(this.selectors.form)
+        const isFormElement = event.target.matches(this.selectors.form)
 
         if (!isFormElement){
             return
