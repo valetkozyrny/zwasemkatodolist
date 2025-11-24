@@ -1,3 +1,4 @@
+
 class FormsValidation {
 
     selectors = {
