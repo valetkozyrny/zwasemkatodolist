@@ -1,6 +1,11 @@
 <?php
 include_once "../../includes/header.php";
+session_start();
+if (isset($_SESSION['agreement'])) {
+
+}
 ?>
+
 <main class="todomain">
     <div class="todopage">
         <h2>To-Do List</h2>

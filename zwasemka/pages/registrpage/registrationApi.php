@@ -22,4 +22,3 @@ $pswPattern ='/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,16}$/';
 if(!preg_match($pswPattern, $password)){
     $errors = 'Invalid password. Password length must be more than 8 and less than 16. Include one uppercase letter, one lowercase letter and one digit';
 }
-// i tak dalee

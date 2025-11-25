@@ -1,7 +1,8 @@
 <?php
-include_once "../../includes/header.php";
+require_once "../../includes/header.php";
+
 ?>
-<form id="regForm" action="/registration" method="post" novalidate data-js-form>
+<form id="regForm" action="/zwasemka/pages/registrpage/pub.php" method="post" novalidate data-js-form>
     <h4> Registration </h4>
     <p class="field">
         <label class="field__label" for="email">Email</label>
@@ -11,7 +12,7 @@ include_once "../../includes/header.php";
                 name="email"
                 required
                 minlength="3"
-                maxlength="18"
+                maxlength="30"
                 aria-errormessage="email-errors"
         />
         <span class="field__errors" id="email-errors" data-js-form-field-errors></span>
@@ -77,5 +78,5 @@ include_once "../../includes/header.php";
     <button type="submit">Sign up</button>
 </form>
 <?php
-include_once "../../includes/footer.php";
+include "../../includes/footer.php";
 ?>
