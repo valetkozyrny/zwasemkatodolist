@@ -40,3 +40,5 @@ $hashOfPassword = password_hash($password,PASSWORD_DEFAULT);
 $data = $email . "|" . $hashOfPassword . "|" . $about . "|" . $gender . "|" . $agreement . "\n";
 file_put_contents('./usersdata.txt', $data, FILE_APPEND);
 
+
+

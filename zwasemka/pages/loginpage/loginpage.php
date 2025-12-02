@@ -5,36 +5,25 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <link rel="stylesheet" href="login.css">
+    <title>Login</title>
 </head>
+
 <body>
-<?php
+<form name="loginform" action="loginapi.php" method="POST" novalidate>
 
-/*echo "<h2> 2222 </h2>";
-$numbers = [1,3,3];
-$colors = ['red','green','blue'];
-var_dump($colors);
+    <label for="email"> Email</label>
+    <input type="email" name="email" id="email" class="email" required>
 
+    <label for="password" > Password </label>
+    <input name="password" id="password" type="password" class="password" required
+           minlength="8"
+           maxlength="16"
+           pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,16}"
+           aria-errormessage="password-errors">
 
-$num = 214;
-if (is_int($num)) {
-    echo "123";
-}
-*/
-$datum = "18.12.2003";
-list($den,$mesic,$rok) = explode(".",$datum);
-list($den, $mesic, $rok) = explode(".", $datum);
-$timestamp = mktime(0, 0, 0, $mesic, $den, $rok);
+    <button type="submit"> Sent login</button>
 
-echo $timestamp;
-
-function getdatum($datum)
-{
-    list($den,$mesic,$rok) = explode(".",$datum);
-
-}
-
-
-?>
+</form>
 </body>
 </html>
