@@ -6,6 +6,7 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="registration.css">
+    <link rel="stylesheet" href="../includes/allstyles.css">
     <script src="registration.js" defer></script>
     <title>Registration</title>
 </head>
@@ -86,5 +87,6 @@
         <a href="/pages/loginpage/loginpage.php">Or sign up</a>
         <button type="submit">Sign up</button>
     </form>
-</body>
-</html>
+<?php
+include "../includes/footer.php";
+?>

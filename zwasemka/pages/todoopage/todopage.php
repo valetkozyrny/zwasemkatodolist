@@ -11,15 +11,9 @@
 </head>
 <body>
 
-
-<header class="site-header">
-    <h1 class="logo">📝 My To-Do</h1>
-    <nav class="nav-links">
-        <a href="../mainpage/mainpage.php">Home</a>
-        <a href="../todoopage/todopage.php" class="active">Tasks</a>
-        <a href="profile.html">Profile</a>
-    </nav>
-</header>
+<?php
+include "../includes/header.php";
+?>
 
 <main class="todomain">
     <div class="todopage">
@@ -28,11 +22,13 @@
         <input class="todofield" required id="todofield" name="todofield" placeholder="New Task">
         <button type="button" id="todobutton">Create</button>
         <ol class="todolist"></ol>
+        <div></div>
     </div>
 </main>
+
 <script src="todopage.js" defer></script>
 
 
-
-</body>
-</html>
+<?php
+include "../includes/footer.php";
+?>

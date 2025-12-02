@@ -3,21 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+          content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>My To-Do List App</title>
+    <title>To-Do List</title>
     <link rel="stylesheet" href="mainpage.css">
-    <script src="mainpage.js" defer></script>
+    <link rel="stylesheet" href="../includes/allstyles.css">
+
 </head>
 <body>
-<header class="site-header">
-    <h1 class="logo">📝 My To-Do</h1>
-    <nav class="nav-links">
-        <a href="../mainpage/mainpage.php">Home</a>
-        <a href="../todoopage/todopage.php" class="active">Tasks</a>
-        <a href="profile.html">Profile</a>
-    </nav>
-</header>
+
+<?php
+include "../includes/header.php";
+?>
 <main class="homepage">
     <section class="intro">
         <h2>Plan your day easily</h2>
@@ -53,12 +50,7 @@
 </section>
 
 
+<?php
+include "../includes/footer.php";
+?>
 
-
-
-
-<footer class="footer">
-    <p>© 2025 Todo-it. Created by Kharkiv Yevhen.</p>
-</footer>
-</body>
-</html>

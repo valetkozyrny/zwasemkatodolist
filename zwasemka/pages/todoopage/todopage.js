@@ -1,81 +1,155 @@
-const todofield = document.querySelector('.todofield')
-const buttoncreate = document.querySelector('button')
-const todolist = document.querySelector('.todolist')
 
-function emptyList() {
-    const tasks = document.querySelectorAll('.todolist li')
-    const emptymessage = document.querySelector('.empty-message')
+// ------------------------------------------------------
+// ЭЛЕМЕНТЫ HTML
+// ------------------------------------------------------
+const todolist = document.querySelector('.todolist');
+const paginationBox = document.querySelector('.pagination');
+const input = document.getElementById("todofield");
+const addBtn = document.getElementById("todobutton");
 
-    if (tasks.length === 0 && !emptymessage) {
-        const p = document.createElement('p')
-        p.classList.add('empty-message')
-        p.textContent = 'No tasks yet 👀'
-        todolist.parentElement.appendChild(p)
-    } else if (tasks.length > 0 && emptymessage) {
-        emptymessage.remove()
+
+// ------------------------------------------------------
+// ФУНКЦИЯ ЗАГРУЗКИ ЗАДАЧ С СЕРВЕРА
+// ------------------------------------------------------
+function loadTasks(page = 1) {
+    fetch(`todoAPI.php?page=${page}`)
+        .then(res => res.json())
+        .then(data => {
+            renderTasks(data.tasks);
+            renderPagination(data.page, data.totalPages);
+        })
+        .catch(err => console.error("Ошибка загрузки:", err));
+}
+
+
+
+// ------------------------------------------------------
+// ОТРИСОВКА СПИСКА ЗАДАЧ
+// ------------------------------------------------------
+function renderTasks(tasks) {
+    todolist.innerHTML = "";
+
+    if (tasks.length === 0) {
+        todolist.innerHTML = "<p>No tasks yet 👀</p>";
+        return;
+    }
+
+    tasks.forEach((task, index) => {
+        const li = document.createElement("li");
+
+        // текст задачи
+        const textSpan = document.createElement("span");
+        textSpan.textContent = task.text;
+
+        // кнопка удаления
+        const delBtn = document.createElement("button");
+        delBtn.textContent = "🗑️";
+        delBtn.classList.add("delete-btn");
+
+        // удаление задачи
+        delBtn.addEventListener("click", () => {
+            fetch("todoAction.php", {
+                method: "POST",
+                body: new URLSearchParams({
+                    action: "delete",
+                    index: index
+                })
+            }).then(() => loadTasks());
+        });
+
+        // редактирование задачи по двойному клику
+        textSpan.addEventListener("dblclick", () => {
+            const newText = prompt("Edit task:", task.text);
+            if (!newText || newText.trim() === "") return;
+
+            fetch("todoAction.php", {
+                method: "POST",
+                body: new URLSearchParams({
+                    action: "update",
+                    index: index,
+                    text: newText.trim()
+                })
+            }).then(() => loadTasks());
+        });
+
+        li.appendChild(textSpan);
+        li.appendChild(delBtn);
+        todolist.appendChild(li);
+    });
+}
+
+
+
+// ------------------------------------------------------
+// ОТРИСОВКА ПАГИНАЦИИ
+// ------------------------------------------------------
+function renderPagination(currentPage, totalPages) {
+    paginationBox.innerHTML = "";
+
+    // Prev
+    if (currentPage > 1) {
+        const prev = document.createElement("button");
+        prev.textContent = "Prev";
+        prev.dataset.page = currentPage - 1;
+        paginationBox.appendChild(prev);
+    }
+
+    // Номера страниц
+    for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement("button");
+        btn.textContent = i;
+        btn.dataset.page = i;
+
+        if (i === currentPage) btn.classList.add("active");
+
+        paginationBox.appendChild(btn);
+    }
+
+    // Next
+    if (currentPage < totalPages) {
+        const next = document.createElement("button");
+        next.textContent = "Next";
+        next.dataset.page = currentPage + 1;
+        paginationBox.appendChild(next);
     }
 }
 
-buttoncreate.addEventListener('click', () => {
-    const taskText = todofield.value.trim()
-    if (taskText === '') return
 
-    const li = document.createElement('li')
-    const taskcheckbox = document.createElement('input')
-    const labelfortask = document.createElement('label')
-    const deletetask = document.createElement('button')
 
-    taskcheckbox.type = 'checkbox'
-    deletetask.textContent = '🗑️'
-    labelfortask.textContent = taskText
+// ------------------------------------------------------
+// КЛИКИ ПО КНОПКАМ ПАГИНАЦИИ
+// ------------------------------------------------------
+paginationBox.addEventListener("click", (event) => {
+    if (event.target.tagName.toLowerCase() === "button") {
+        const page = event.target.dataset.page;
+        loadTasks(page);
+    }
+});
 
-    li.appendChild(taskcheckbox)
-    li.appendChild(labelfortask)
-    li.appendChild(deletetask)
-    todolist.appendChild(li)
-    todofield.value = ''
 
-    deletetask.addEventListener('click', () => {
-        li.remove()
-        emptyList()
-    })
 
-    labelfortask.addEventListener('dblclick', () => {
-        const newinput = document.createElement('input')
-        newinput.type = 'text'
-        newinput.classList.add('edit-input')
-        newinput.value = labelfortask.textContent.trim()
+// ------------------------------------------------------
+// ДОБАВЛЕНИЕ НОВОЙ ЗАДАЧИ
+// ------------------------------------------------------
+addBtn.addEventListener("click", () => {
+    const text = input.value.trim();
+    if (!text) return;
 
-        li.replaceChild(newinput, labelfortask)
-        newinput.focus()
-
-        function saveEdit() {
-            const newtext = newinput.value.trim()
-            if (newtext !== '') {
-                labelfortask.textContent = newtext
-                li.replaceChild(labelfortask, newinput)
-            } else {
-                newinput.focus()
-            }
-        }
-
-        function cancelEdit() {
-            li.replaceChild(labelfortask, newinput)
-        }
-
-        newinput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                saveEdit()
-            } else if (e.key === 'Escape') {
-                cancelEdit()
-            }
+    fetch("todoAction.php", {
+        method: "POST",
+        body: new URLSearchParams({
+            action: "add",
+            text: text
         })
+    }).then(() => {
+        input.value = "";
+        loadTasks();
+    });
+});
 
-        newinput.addEventListener('blur', saveEdit)
-    })
-
-    emptyList()
-})
 
 
-emptyList()
+// ------------------------------------------------------
+// ЗАГРУЖАЕМ ПЕРВУЮ СТРАНИЦУ ПРИ ОТКРЫТИИ
+// ------------------------------------------------------
+loadTasks();
