@@ -20,7 +20,7 @@
                     name="email"
                     required
                     minlength="3"
-                    maxlength="18"
+                    maxlength="30"
                     aria-errormessage="email-errors"
             />
             <span class="field__errors" id="email-errors" data-js-form-field-errors></span>
@@ -83,6 +83,7 @@
             <label class="field__label checkbox__label" for="agreement">Agree with all</label>
             <span class="field__errors" id="agreement-errors" data-js-form-field-errors></span>
         </div>
+        <a href="/pages/loginpage/loginpage.php">Or sign up</a>
         <button type="submit">Sign up</button>
     </form>
 </body>
