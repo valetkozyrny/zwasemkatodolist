@@ -1,75 +1,67 @@
-
-// ------------------------------------------------------
-// ЭЛЕМЕНТЫ HTML
-// ------------------------------------------------------
 const todolist = document.querySelector('.todolist');
 const paginationBox = document.querySelector('.pagination');
 const input = document.getElementById("todofield");
 const addBtn = document.getElementById("todobutton");
 
+let currentPage = 1;
 
-// ------------------------------------------------------
-// ФУНКЦИЯ ЗАГРУЗКИ ЗАДАЧ С СЕРВЕРА
-// ------------------------------------------------------
+// ----------------------------
+// Загрузка задач
+// ----------------------------
 function loadTasks(page = 1) {
     fetch(`todoAPI.php?page=${page}`)
-        .then(res => res.json())
+        .then(r => r.json())
         .then(data => {
+            currentPage = data.page;
             renderTasks(data.tasks);
             renderPagination(data.page, data.totalPages);
-        })
-        .catch(err => console.error("Ошибка загрузки:", err));
+        });
 }
 
 
-
-// ------------------------------------------------------
-// ОТРИСОВКА СПИСКА ЗАДАЧ
-// ------------------------------------------------------
+// ----------------------------
+// Отрисовка задач
+// ----------------------------
 function renderTasks(tasks) {
     todolist.innerHTML = "";
 
     if (tasks.length === 0) {
-        todolist.innerHTML = "<p>No tasks yet 👀</p>";
+        todolist.innerHTML = "<p>No tasks</p>";
         return;
     }
 
-    tasks.forEach((task, index) => {
+    tasks.forEach(task => {
         const li = document.createElement("li");
 
-        // текст задачи
         const textSpan = document.createElement("span");
         textSpan.textContent = task.text;
 
-        // кнопка удаления
-        const delBtn = document.createElement("button");
-        delBtn.textContent = "🗑️";
-        delBtn.classList.add("delete-btn");
-
-        // удаление задачи
-        delBtn.addEventListener("click", () => {
-            fetch("todoAction.php", {
-                method: "POST",
-                body: new URLSearchParams({
-                    action: "delete",
-                    index: index
-                })
-            }).then(() => loadTasks());
-        });
-
-        // редактирование задачи по двойному клику
+        // edit
         textSpan.addEventListener("dblclick", () => {
-            const newText = prompt("Edit task:", task.text);
-            if (!newText || newText.trim() === "") return;
+            const newText = prompt("Edit:", task.text);
+            if (!newText) return;
 
             fetch("todoAction.php", {
                 method: "POST",
                 body: new URLSearchParams({
                     action: "update",
-                    index: index,
-                    text: newText.trim()
+                    index: task.realIndex,
+                    text: newText
                 })
-            }).then(() => loadTasks());
+            }).then(() => loadTasks(currentPage));
+        });
+
+        const delBtn = document.createElement("button");
+        delBtn.textContent = "🗑️";
+
+        delBtn.addEventListener("click", () => {
+            fetch("todoAction.php", {
+                method: "POST",
+                body: new URLSearchParams({
+                    action: "delete",
+                    index: task.realIndex
+                })
+            }).then(() => loadTasks(currentPage));
         });
 
         li.appendChild(textSpan);
@@ -79,58 +71,44 @@ function renderTasks(tasks) {
 }
 
 
-
-// ------------------------------------------------------
-// ОТРИСОВКА ПАГИНАЦИИ
-// ------------------------------------------------------
-function renderPagination(currentPage, totalPages) {
+// ----------------------------
+// Пагинация
+// ----------------------------
+function renderPagination(page, total) {
     paginationBox.innerHTML = "";
 
-    // Prev
-    if (currentPage > 1) {
+    if (page > 1) {
         const prev = document.createElement("button");
         prev.textContent = "Prev";
-        prev.dataset.page = currentPage - 1;
+        prev.dataset.page = page - 1;
         paginationBox.appendChild(prev);
     }
 
-    // Номера страниц
-    for (let i = 1; i <= totalPages; i++) {
+    for (let i = 1; i <= total; i++) {
         const btn = document.createElement("button");
         btn.textContent = i;
         btn.dataset.page = i;
-
-        if (i === currentPage) btn.classList.add("active");
-
+        if (i === page) btn.classList.add("active");
         paginationBox.appendChild(btn);
     }
 
-    // Next
-    if (currentPage < totalPages) {
+    if (page < total) {
         const next = document.createElement("button");
         next.textContent = "Next";
-        next.dataset.page = currentPage + 1;
+        next.dataset.page = page + 1;
         paginationBox.appendChild(next);
     }
 }
 
-
-
-// ------------------------------------------------------
-// КЛИКИ ПО КНОПКАМ ПАГИНАЦИИ
-// ------------------------------------------------------
-paginationBox.addEventListener("click", (event) => {
-    if (event.target.tagName.toLowerCase() === "button") {
-        const page = event.target.dataset.page;
-        loadTasks(page);
-    }
+paginationBox.addEventListener("click", (e) => {
+    if (e.target.tagName !== "BUTTON") return;
+    loadTasks(e.target.dataset.page);
 });
 
 
-
-// ------------------------------------------------------
-// ДОБАВЛЕНИЕ НОВОЙ ЗАДАЧИ
-// ------------------------------------------------------
+// ----------------------------
+// Добавление
+// ----------------------------
 addBtn.addEventListener("click", () => {
     const text = input.value.trim();
     if (!text) return;
@@ -139,17 +117,13 @@ addBtn.addEventListener("click", () => {
         method: "POST",
         body: new URLSearchParams({
             action: "add",
-            text: text
+            text
         })
     }).then(() => {
         input.value = "";
-        loadTasks();
+        loadTasks(1); // после добавления возвращаемся на первую страницу
     });
 });
 
-
-
-// ------------------------------------------------------
-// ЗАГРУЖАЕМ ПЕРВУЮ СТРАНИЦУ ПРИ ОТКРЫТИИ
-// ------------------------------------------------------
+// первая загрузка
 loadTasks();

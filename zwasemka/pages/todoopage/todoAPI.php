@@ -1,40 +1,35 @@
 <?php
-session_start();
+header('Content-Type: application/json');
 
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-if($page <1) $page = 1;
+$path = __DIR__ . "/tasks.json";
 
-$userEmail = $_SESSION['user']['email'];
-$filePath = __DIR__ . "/todo_" . $userEmail . ".txt";
-
-if (file_exists($filePath)) {
-    file_put_contents($filePath, "");
+if (!file_exists($path)) {
+    file_put_contents($path, json_encode([]));
 }
 
-$lines = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+$tasks = json_decode(file_get_contents($path), true);
+if (!is_array($tasks)) $tasks = [];
 
-$tasksForPag = 5;
-$totaltasks = count($lines);
+// ---
+$page = isset($_GET["page"]) ? intval($_GET["page"]) : 1;
+$page = max(1, $page);
 
-$totalpages = (max(1,ceil($totaltasks / $tasksForPag)));
+$perPage = 5;
+$total = count($tasks);
+$totalPages = max(1, ceil($total / $perPage));
 
-$startindex = ($page - 1) * $tasksForPag;
+$start = ($page - 1) * $perPage;
+$tasksPage = array_slice($tasks, $start, $perPage);
 
-$currentTasks = array_slice($lines, $startindex, $tasksForPag);
-
-
-
-$tasks = [];
-foreach ($currentTasks as $task) {
-    list($text, $status) = explode(" | ", $task);
-    $tasks[] = [
-        'text' => $text,
-        'status' => $status
-    ];
+// добавляем реальный индекс, чтобы не путаться
+foreach ($tasksPage as $i => $t) {
+    $tasksPage[$i]["realIndex"] = $start + $i;
 }
-header('Content-type: application/json');
+
 echo json_encode([
+    "ok" => true,
     "page" => $page,
-    "totalPages" => $totalpages,
-    "tasks" => $tasks
+    "totalPages" => $totalPages,
+    "tasks" => $tasksPage
 ]);
+exit;

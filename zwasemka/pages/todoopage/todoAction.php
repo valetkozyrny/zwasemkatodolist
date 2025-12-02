@@ -1,90 +1,82 @@
 <?php
-session_start();
+header('Content-Type: application/json');
 
-$user = $_SESSION['user']['email'];
-$path = __DIR__ . "/todos_" . $user . ".txt";
+$path = __DIR__ . "/tasks.json";
 
-$action = $_POST['action'] ?? null;
-
-// защищаемся если файла нет
 if (!file_exists($path)) {
-    file_put_contents($path, "");
+    file_put_contents($path, json_encode([]));
+}
+
+$tasks = json_decode(file_get_contents($path), true);
+if (!is_array($tasks)) $tasks = [];
+
+
+$action = $_POST["action"] ?? "";
+
+
+// --------------------------------------
+// ADD
+// --------------------------------------
+if ($action === "add") {
+    $text = trim($_POST["text"] ?? "");
+    if ($text === "") {
+        echo json_encode(["ok" => false, "message" => "Empty text"]);
+        exit;
+    }
+
+    $tasks[] = [
+        "text" => $text
+    ];
+
+    file_put_contents($path, json_encode($tasks));
+    echo json_encode(["ok" => true]);
+    exit;
 }
 
 
+// --------------------------------------
+// DELETE
+// --------------------------------------
+if ($action === "delete") {
+    $index = intval($_POST["index"]);
 
-// --------------------------------------------------
-// 1️⃣ ДОБАВЛЕНИЕ ЗАДАЧИ
-// --------------------------------------------------
-if ($action === "add") {
+    if (!isset($tasks[$index])) {
+        echo json_encode(["ok" => false, "message" => "Not found"]);
+        exit;
+    }
 
-    $text = trim($_POST['text'] ?? "");
+    array_splice($tasks, $index, 1);
+
+    file_put_contents($path, json_encode($tasks));
+    echo json_encode(["ok" => true]);
+    exit;
+}
+
+
+// --------------------------------------
+// UPDATE
+// --------------------------------------
+if ($action === "update") {
+    $index = intval($_POST["index"]);
+    $text = trim($_POST["text"] ?? "");
+
+    if (!isset($tasks[$index])) {
+        echo json_encode(["ok" => false, "message" => "Not found"]);
+        exit;
+    }
 
     if ($text === "") {
-        echo json_encode(["status" => "error", "message" => "Empty text"]);
+        echo json_encode(["ok" => false, "message" => "Empty text"]);
         exit;
     }
 
-    // формат: text|notdone
-    file_put_contents($path, $text . "|notdone\n", FILE_APPEND);
+    $tasks[$index]["text"] = $text;
 
-    echo json_encode(["status" => "success"]);
+    file_put_contents($path, json_encode($tasks));
+    echo json_encode(["ok" => true]);
     exit;
 }
 
 
-
-// --------------------------------------------------
-// 2️⃣ УДАЛЕНИЕ ЗАДАЧИ ПО ИНДЕКСУ
-// --------------------------------------------------
-if ($action === "delete") {
-
-    $index = (int)$_POST['index'];
-
-    $lines = file($path, FILE_IGNORE_NEW_LINES);
-
-    if (!isset($lines[$index])) {
-        echo json_encode(["status" => "error", "message" => "Task not found"]);
-        exit;
-    }
-
-    unset($lines[$index]);
-
-    file_put_contents($path, implode("\n", $lines) . "\n");
-
-    echo json_encode(["status" => "success"]);
-    exit;
-}
-
-
-
-// --------------------------------------------------
-// 3️⃣ ОБНОВЛЕНИЕ ТЕКСТА
-// --------------------------------------------------
-if ($action === "update") {
-
-    $index = (int)$_POST['index'];
-    $newText = trim($_POST['text']);
-
-    $lines = file($path, FILE_IGNORE_NEW_LINES);
-
-    if (!isset($lines[$index])) {
-        echo json_encode(["status" => "error", "message" => "Task not found"]);
-        exit;
-    }
-
-    // статус остаётся прежний
-    list($_oldText, $status) = explode("|", $lines[$index]);
-
-    $lines[$index] = $newText . "|" . $status;
-
-    file_put_contents($path, implode("\n", $lines) . "\n");
-
-    echo json_encode(["status" => "success"]);
-    exit;
-}
-
-
-echo json_encode(["status" => "error", "message" => "Invalid action"]);
+echo json_encode(["ok" => false, "message" => "Invalid action"]);
 exit;
-
